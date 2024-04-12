@@ -1,4 +1,4 @@
-TARGET := dut.v
+TARGET := hdl/dut.v
 TARGET_OUTPUT := controller
 
 all: dut run
