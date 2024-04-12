@@ -10,8 +10,8 @@ module controller_fsm (
 	alm_blkg // Señal de bloqueo de compuerta
 );
 
-input clock, reset, pin, senr_e, senr_x;
-output reg gate_o, gate_cls, alm_pin, alm_blkg;
+input wire clock, reset, pin, senr_e, senr_x;
+output wire gate_o, gate_cls, alm_pin, alm_blkg;
 
 // PIN de ingreso al estacionamiento
 localparam PIN = 7'd72;
@@ -26,6 +26,18 @@ localparam idle = 8'd1,
 	   gate_closing = 8'd64, // Vehiculo terminó de ingresar y se cierra compuerta
 	   gate_blocking = 8'd128; // Se bloquea puerta porque se activaron los 2 sensores
 
+reg [7:0] state;
+reg [7:0] next_state;
+
+
+// Transición de estados con el flanco de reloj
+always @(posedge clock) begin
+	if (reset) state <= idle;
+	else state <=next_state;
+end
 
 
 endmodule
+
+
+
