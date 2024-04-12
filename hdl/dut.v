@@ -28,13 +28,15 @@ localparam idle = 8'd1,
 reg [6:0] state;
 reg [6:0] next_state;
 
-reg [1:0] counter;
+reg [1:0] counter = 2'b00;
 
 
 // Transición de estados con el flanco de reloj
 always @(posedge clock) begin
-	if (reset) state <= idle;
-	else state <=next_state;
+	if (reset) begin 
+		state <= idle;
+		counter <= 0;
+	end else state <=next_state;
 end
 
 // Calculo del proximo estado
@@ -65,6 +67,26 @@ always @(*) begin
 		end
 		gate_blocking: begin
 			if(pin == PIN) next_state = gate_closing;
+		end
+	endcase
+end
+
+// Asignación de salidas
+
+assign gate_o = (state == car_entering) | (state == gate_blocking);
+assign gate_cls = (state == gate_closing);
+assign alm_pin = (state == pin_alarm);
+assign alm_blkg = (state == gate_blocking);
+
+// Asignación del counter interno
+
+always @(posedge clock) begin
+	case (state)
+		incorrect_pin: begin
+			if (counter < 3) counter <= counter + 1;
+		end
+		car_entering: begin
+			counter <= 0;
 		end
 	endcase
 end
