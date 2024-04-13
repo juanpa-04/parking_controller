@@ -7,10 +7,11 @@ module controller_fsm (
 	gate_o, // Señal de abrir compuerta
 	gate_cls, // Señal de cerrar compuerta
 	alm_pin, // Señal de alarma de pin
-	alm_blkg // Señal de bloqueo de compuerta
+	alm_blkg, // Señal de bloqueo de compuerta
+	ent_pin // Señal de ingreso de pin
 );
 
-input clock, reset, senr_e, senr_x;
+input clock, reset, senr_e, senr_x, ent_pin;
 input [7:0] pin;
 output gate_o, gate_cls, alm_pin, alm_blkg;
 
@@ -24,7 +25,7 @@ localparam idle = 7'd1,
 	   pin_alarm = 7'd8, // Activa la alarma de PIN después de 3 intentos
 	   car_entering = 7'd16, // Ingreso de pin correcto y se abre compuerta
 	   gate_closing = 7'd32, // Vehiculo terminó de ingresar y se cierra compuerta
-	   gate_blocking = 7'd64; // Se bloquea puerta porque se activaron los 2 sensores
+	   gate_blocking = 7'd64;// Se bloquea puerta porque se activaron los 2 sensores
 
 // Registros de estado, próximo estado, y contador
 reg [6:0] state;
@@ -47,25 +48,28 @@ always @(*) begin
 			if(senr_e) next_state = waiting_pin;
 		end
 		waiting_pin: begin
-			if(pin == PIN) next_state = car_entering;
-			else next_state = incorrect_pin;
+			if(ent_pin & pin != PIN) begin
+				next_state = incorrect_pin;
+				counter = counter + 1;
+			end
+			else if(ent_pin & pin == PIN) next_state = car_entering;
 		end
 		car_entering: begin
 			if(senr_e & senr_x) next_state = gate_blocking;
 			else if(senr_x) next_state = gate_closing;
 		end
 		incorrect_pin: begin
-			if(counter == 3) next_state = pin_alarm;
-			else if(pin == PIN) next_state = car_entering;
+			if(counter != 3) next_state = waiting_pin;
+			else next_state = pin_alarm;
 		end
 		pin_alarm: begin
-			if(pin == PIN) next_state = car_entering;
+			if(pin == PIN & ent_pin) next_state = car_entering;
 		end
 		gate_closing: begin
 			next_state = idle;
 		end
 		gate_blocking: begin
-			if(pin == PIN) next_state = gate_closing;
+			if(pin == PIN & ent_pin) next_state = gate_closing;
 		end
 		default: next_state = idle;
 	endcase
@@ -82,9 +86,6 @@ assign alm_blkg = (state == gate_blocking);
 // Cuando se ingrese el pin correcto se limpia el contador
 always @(posedge clock) begin
 	case (state)
-		incorrect_pin: begin
-			if (counter != 3) counter <= counter + 1;
-		end
 		car_entering: begin
 			counter <= 0;
 		end
