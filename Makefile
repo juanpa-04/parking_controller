@@ -1,14 +1,21 @@
-TARGET := hdl/dut.v
-TARGET_OUTPUT := controller
+TARGET := test/dut_tb.v
+TARGET_OUTPUT := bin/controller
+HDL_DIR := hdl/
+TEST_DIR := test/
+VCD := results.vcd
 
-all: dut run
+all: dut run graph
 
 dut: $(TARGET)
-	iverilog -o $(TARGET_OUTPUT) $(TARGET)
+	iverilog -o $(TARGET_OUTPUT) $(TARGET) -I$(HDL_DIR) -I$(TEST_DIR)
 
-run: 
+run: $(TARGET_OUTPUT)
 	vvp $(TARGET_OUTPUT)
+
+graph: 
+	gtkwave $(VCD)
 
 clean:
 	rm -f $(TARGET_OUTPUT)
+	rm -f bin/$(VCD)
 
