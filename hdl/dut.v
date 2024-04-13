@@ -10,11 +10,12 @@ module controller_fsm (
 	alm_blkg // Señal de bloqueo de compuerta
 );
 
-input wire clock, reset, pin, senr_e, senr_x;
-output wire gate_o, gate_cls, alm_pin, alm_blkg;
+input clock, reset, senr_e, senr_x;
+input [7:0] pin;
+output gate_o, gate_cls, alm_pin, alm_blkg;
 
 // PIN de ingreso al estacionamiento
-localparam PIN = 7'd72;
+reg [7:0] PIN = 7'd72;
 
 // Estados del controlador (codificación one-hot)
 localparam idle = 7'd1,
