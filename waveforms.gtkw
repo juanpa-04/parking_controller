@@ -1,0 +1,36 @@
+[*]
+[*] GTKWave Analyzer v3.3.116 (w)1999-2023 BSI
+[*] Sat Apr 13 19:08:33 2024
+[*]
+[dumpfile] "/home/juanpa/UCR/digitales_ii/tarea_1/bin/results.vcd"
+[dumpfile_mtime] "Sat Apr 13 18:55:34 2024"
+[dumpfile_size] 2212
+[savefile] "/home/juanpa/UCR/digitales_ii/tarea_1/bin/waveforms.gtkw"
+[timestart] 134
+[size] 1210 721
+[pos] -27 -24
+*-5.868248 265 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] dut_tb.
+[sst_width] 278
+[signals_width] 126
+[sst_expanded] 1
+[sst_vpaned_height] 200
+@28
+dut_tb.CONTROLLER.clock
+@22
+dut_tb.CONTROLLER.state[6:0]
+@28
+dut_tb.CONTROLLER.senr_e
+dut_tb.CONTROLLER.senr_x
+@29
+dut_tb.CONTROLLER.counter[1:0]
+@22
+dut_tb.CONTROLLER.pin[7:0]
+@28
+dut_tb.CONTROLLER.ent_pin
+dut_tb.CONTROLLER.gate_cls
+dut_tb.CONTROLLER.gate_o
+dut_tb.CONTROLLER.alm_blkg
+dut_tb.CONTROLLER.alm_pin
+[pattern_trace] 1
+[pattern_trace] 0
